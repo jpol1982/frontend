@@ -5,4 +5,4 @@ movimiento.simulador = (req, res) => {
      res.render('movimientosimulador');
 };
 
-module.exports = movimientos;
+module.exports = movimiento;
