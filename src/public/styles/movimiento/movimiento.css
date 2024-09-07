@@ -1,0 +1,78 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.escenario {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    border: 2px solid black;
+   
+    background-size: cover;
+    background-position: center;
+}
+
+.personaje {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 86%;
+    left: 12%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease;
+}
+
+.personaje img {
+    width: 100%;
+    height: 100%;
+}
+
+.cartas-container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.carta {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    border: 1px solid #333;
+    background-color: #ddd;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carta img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+#zona-drop {
+    width: 400px;
+    height: 60px;
+    margin-bottom: 20px;
+    border: 2px dashed #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#ejecutar-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#ejecutar-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

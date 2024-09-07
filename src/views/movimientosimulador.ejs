@@ -1,163 +1,117 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="styles/movimiento/movimiento.css" />
+    
+
     <title>Simulador de Movimiento</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-        }
-
-        canvas {
-            border: 2px solid black;
-            margin-top: 20px;
-            background-color: #f0f0f0;
-        }
-
-        .cartas-container {
-            display: flex;
-            margin-bottom: 20px;
-        }
-
-        .carta {
-            width: 100px;
-            height: 50px;
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #333;
-            text-align: center;
-            background-color: #ddd;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .carta img {
-            max-width: 80px;
-            max-height: 80px;
-        }
-
-        #zona-drop {
-            width: 400px;
-            height: 60px;
-            margin-bottom: 20px;
-            border: 2px dashed #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #ejecutar-btn {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        #ejecutar-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-    </style>
+    
 </head>
+
+
+
+
+
 <body>
 
     <!-- Contenedor de cartas de acción -->
-    <div class="cartas-container">
-        <div class="carta" draggable="true" data-action="girarIzq" > <img src="/img/girarIzq.png" width="40" height="40"/> Girar Izq</div>
-        <div class="carta" draggable="true" data-action="girarDer"> <img src="/img/girarDer.png" width="40" height="40"/> Girar Der</div>
-        <div class="carta" draggable="true" data-action="avanzar"><img src="/img/avanzar.png" width="40" height="40"/> Avanzar</div>
-        <div class="carta" draggable="true" data-action="retroceder"><img src="/img/retroceder.png" width="40" height="40"/>Retroceder</div>
+    <div class="cartas-container" id="cartas-container">
+        <!-- Las cartas se generarán dinámicamente -->
     </div>
 
     <!-- Zona donde se colocan las cartas para ejecutar -->
     <div id="zona-drop">
-        Arrastra las cartas aquí
+        Arrastra tus movimientos aqui
     </div>
 
     <!-- Botón para ejecutar las acciones -->
     <button id="ejecutar-btn" disabled>Ejecutar</button>
 
-    <!-- Canvas donde se dibuja el personaje -->
-    <canvas id="tablero" width="500" height="500"></canvas>
+    <!-- Escenario donde se mueve el personaje -->
+    <div class="escenario"  style="background-image: url('img/figuras.jpg')">
+        <!-- Personaje que se moverá -->
+        <div class="personaje" id="personaje">
+            <img src="img/robotderecha.jpg" alt="Personaje">
+        </div>
+    </div>
 
     <script>
-        // Configuración inicial del canvas
-        const canvas = document.getElementById('tablero');
-        const ctx = canvas.getContext('2d');
-        let instrucciones = [];
-
-        // Estado inicial del personaje
-        const personaje = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            angulo: 0, // Ángulo en grados
-            img: new Image(),
-            ancho: 50, // Ancho del personaje
-            alto: 50   // Alto del personaje
+        // Objeto con las URLs de las imágenes para cada acción
+        const imagenesCartas = {
+            girarIzq: 'img/girarIzq.png',
+            girarDer: 'img/girarDer.png',
+            avanzar: 'img/avanzar.png',
+            retroceder: 'img/retroceder.png'
         };
 
-        // Cargar la única imagen del personaje
-        personaje.img.src = '/img/robotderecha.jpg'; // Reemplaza con la ruta de tu imagen
+        // Crear las cartas dinámicamente
+        const cartasContainer = document.getElementById('cartas-container');
+        for (const [accion, urlImagen] of Object.entries(imagenesCartas)) {
+            const carta = document.createElement('div');
+            carta.classList.add('carta');
+            carta.setAttribute('draggable', 'true');
+            carta.setAttribute('data-action', accion);
 
-        // Función para dibujar el personaje en el canvas
-        function dibujarPersonaje() {
-            const mitadAncho = personaje.ancho / 2;
-            const mitadAlto = personaje.alto / 2;
+            const img = document.createElement('img');
+            img.src = urlImagen;
+            img.alt = accion;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.translate(personaje.x, personaje.y); // Mover origen al centro del personaje
-            ctx.rotate(personaje.angulo * Math.PI / 180); // Rotar el canvas según el ángulo
-            ctx.drawImage(personaje.img, -mitadAncho, -mitadAlto, personaje.ancho, personaje.alto); // Dibujar imagen centrada
-            ctx.restore();
-        }
+            carta.appendChild(img);
+            cartasContainer.appendChild(carta);
 
-        // Función para ejecutar las instrucciones
-        function ejecutarInstrucciones() {
-            let index = 0;
-            function ejecutarPaso() {
-                if (index >= instrucciones.length) return;
-
-                const instruccion = instrucciones[index];
-                switch (instruccion) {
-                    case 'girarIzq':
-                        personaje.angulo = (personaje.angulo - 90 + 360) % 360;
-                        break;
-                    case 'girarDer':
-                        personaje.angulo = (personaje.angulo + 90) % 360;
-                        break;
-                    case 'avanzar':
-                        personaje.x += 50 * Math.cos(personaje.angulo * Math.PI / 180);
-                        personaje.y += 50 * Math.sin(personaje.angulo * Math.PI / 180);
-                        break;
-                    case 'retroceder':
-                        personaje.x -= 50 * Math.cos(personaje.angulo * Math.PI / 180);
-                        personaje.y -= 50 * Math.sin(personaje.angulo * Math.PI / 180);
-                        break;
-                }
-
-                dibujarPersonaje();
-                index++;
-                setTimeout(() => ejecutarPaso(), 500); // Pausa entre cada paso
-            }
-            ejecutarPaso();
-        }
-
-        // Configuración del arrastre de cartas
-        document.querySelectorAll('.carta').forEach(carta => {
             carta.addEventListener('dragstart', e => {
-                e.dataTransfer.setData('text/plain', e.target.dataset.action);
+                e.dataTransfer.setData('text/plain', accion);
             });
-        });
+        }
+
+        const personaje = document.getElementById('personaje');
+
+        // Estado inicial del personaje
+        let angulo = 0;
+        let posicionX = 12; // Porcentaje del left
+        let posicionY = 86; // Porcentaje del top
+
+        // Lista de instrucciones (girarIzq, girarDer, avanzar, retroceder)
+        const instrucciones = [];
+
+        // Función para mover o girar al personaje
+        function moverPersonaje(accion) {
+            switch (accion) {
+                case 'girarIzq':
+                    angulo -= 90; // Girar 90 grados a la izquierda
+                    break;
+                case 'girarDer':
+                    angulo += 90; // Girar 90 grados a la derecha
+                    break;
+                case 'avanzar':
+                    // Avanzar en la dirección en que está mirando el personaje
+                    posicionX += 25 * Math.cos(angulo * Math.PI / 180);
+                    posicionY += 25 * Math.sin(angulo * Math.PI / 180);
+                    break;
+                case 'retroceder':
+                    // Retroceder en la dirección opuesta a la que está mirando
+                    posicionX -= 25 * Math.cos(angulo * Math.PI / 180);
+                    posicionY -= 25 * Math.sin(angulo * Math.PI / 180);
+                    break;
+            }
+
+            // Asegurarse de que el personaje no salga de los límites del escenario
+            if (posicionX < 0) posicionX = 0;
+            if (posicionX > 100) posicionX = 100;
+            if (posicionY < 0) posicionY = 0;
+            if (posicionY > 100) posicionY = 100;
+
+            // Actualizar la posición y el ángulo del personaje
+            personaje.style.transform = `translate(-50%, -50%) rotate(${angulo}deg)`;
+            personaje.style.left = `${posicionX}%`;
+            personaje.style.top = `${posicionY}%`;
+        }
 
         // Zona donde se dejan caer las cartas
         const zonaDrop = document.getElementById('zona-drop');
@@ -168,37 +122,38 @@
         zonaDrop.addEventListener('drop', e => {
             e.preventDefault();
             const action = e.dataTransfer.getData('text/plain');
-           
-             console.log(action);
-           if(action != "undefined")
-         {   instrucciones.push(action);
+            instrucciones.push(action);
+
             const carta = document.createElement('div');
             carta.classList.add('carta');
-
             const img = document.createElement('img');
-            img.src = `/img/${action}.png`;
-            img.style.width = "30px";
-            img.style.height = "30px";
-
-            img.alt = action.charAt(0).toUpperCase() + action.slice(1);
+            img.src = imagenesCartas[action]; // Asigna la imagen desde el objeto
+            img.alt = action;
             carta.appendChild(img);
             zonaDrop.appendChild(carta);
 
             document.getElementById('ejecutar-btn').disabled = false;
+        });
+
+        // Función para ejecutar las instrucciones en secuencia
+        function ejecutarInstrucciones() {
+            let index = 0;
+            function ejecutarPaso() {
+                if (index >= instrucciones.length) return;
+
+                const instruccion = instrucciones[index];
+                moverPersonaje(instruccion);
+
+                index++;
+                setTimeout(() => ejecutarPaso(), 500); // Pausa entre cada paso
+            }
+            ejecutarPaso();
         }
 
-         });
-
-
-        // Ejecutar las instrucciones cuando se presiona el botón
+        // Botón para ejecutar las instrucciones
         document.getElementById('ejecutar-btn').addEventListener('click', () => {
             ejecutarInstrucciones();
         });
-
-        // Dibujar el personaje una vez que la imagen esté cargada
-        personaje.img.onload = function() {
-            dibujarPersonaje();
-        };
     </script>
 
 </body>
