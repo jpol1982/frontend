@@ -38,8 +38,8 @@ body {
 }
 
 .carta {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     margin: 10px;
     border: 1px solid #333;
     background-color: #ddd;
@@ -50,8 +50,8 @@ body {
 }
 
 .carta img {
-    max-width: 80px;
-    max-height: 80px;
+    max-width: 60px;
+    max-height: 60px;
 }
 
 #zona-drop {
@@ -75,4 +75,49 @@ body {
 #ejecutar-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+
+#guardar-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#guardar-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+#restablecer-btn {
+    padding: 10px 20px;
+    background-color: #cc0101;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#restablecer-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.carta {
+    transition: left 0.3s, top 0.3s;
+}
+
+
+
+
+/* Mejora para pantallas pequeñas */
+@media (max-width: 600px) {
+    .carta {
+        width: 50px;
+        height: 50px;
+    }
 }

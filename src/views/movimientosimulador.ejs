@@ -32,6 +32,8 @@
 
     <!-- Botón para ejecutar las acciones -->
     <button id="ejecutar-btn" disabled>Ejecutar</button>
+  <!--  <button id="guardar-btn" disabled>Guardar Movimientos</button>-->
+    <button id="restablecer-btn">Restablecer Posición</button>
 
     <!-- Escenario donde se mueve el personaje -->
     <div class="escenario"  style="background-image: url('img/figuras.jpg')">
@@ -64,10 +66,77 @@
 
             carta.appendChild(img);
             cartasContainer.appendChild(carta);
-
+          
+            // Eventos de arrastre para PC
             carta.addEventListener('dragstart', e => {
                 e.dataTransfer.setData('text/plain', accion);
             });
+
+            let posInicialX = 0;
+            let posInicialY = 0;
+            
+// Eventos táctiles para móviles
+carta.addEventListener('touchstart', e => {
+        const touch = e.touches[0];
+        posInicialX = 0;
+        posInicialY = 0;
+
+        carta.style.position = 'absolute';
+        carta.style.left = `${touch.pageX - carta.offsetWidth / 2}px`;
+        carta.style.top = `${touch.pageY - carta.offsetHeight / 2}px`;
+    });
+
+    carta.addEventListener('touchmove', e => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        carta.style.left = `${touch.pageX - carta.offsetWidth / 2}px`;
+        carta.style.top = `${touch.pageY - carta.offsetHeight / 2}px`;
+    });
+
+    carta.addEventListener('touchend', e => {
+        const touch = e.changedTouches[0];
+        const dropZoneRect = zonaDrop.getBoundingClientRect();
+
+        // Si la carta cae dentro de la zona de drop
+        if (
+            touch.pageX > dropZoneRect.left &&
+            touch.pageX < dropZoneRect.right &&
+            touch.pageY > dropZoneRect.top &&
+            touch.pageY < dropZoneRect.bottom
+        ) {
+            instrucciones.push(accion);
+
+            const nuevaCarta = document.createElement('div');
+            nuevaCarta.style.width = '50px';
+            nuevaCarta.style.height = '50px';
+            nuevaCarta.classList.add('carta');
+
+            const img = document.createElement('img');
+            img.src = imagenesCartas[accion];
+            img.alt = accion;
+
+            nuevaCarta.appendChild(img);
+            zonaDrop.appendChild(nuevaCarta);
+
+            // Habilitar los botones
+            document.getElementById('ejecutar-btn').disabled = false;
+            document.getElementById('guardar-btn').disabled = false;
+
+            // Regresar la carta a su posición original después de soltarla
+            carta.style.left = `${0}px`;
+            carta.style.top = `${0}px`;
+            carta.style.position = 'relative'; // Esto restaura su flujo normal en el DOM
+        } else {
+            // Si no se soltó en la zona de drop, la carta regresa a su lugar original
+            carta.style.left = `${0}px`;
+            carta.style.top = `${0}px`;
+            carta.style.position = 'relative';
+        }
+    });
+
+
+
+
         }
 
         const personaje = document.getElementById('personaje');
@@ -119,20 +188,47 @@
             e.preventDefault();
         });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
         zonaDrop.addEventListener('drop', e => {
             e.preventDefault();
             const action = e.dataTransfer.getData('text/plain');
             instrucciones.push(action);
 
             const carta = document.createElement('div');
+            carta.style.width= '50px';
+            carta.style.height= '50px';
             carta.classList.add('carta');
             const img = document.createElement('img');
             img.src = imagenesCartas[action]; // Asigna la imagen desde el objeto
             img.alt = action;
+            
+           // img.scr.height = '20px';
+          //  img.width = '20px';
+
             carta.appendChild(img);
             zonaDrop.appendChild(carta);
 
             document.getElementById('ejecutar-btn').disabled = false;
+            document.getElementById('guardar-btn').disabled = false; // Habilitar el botón de guardar
+            document.getElementById('restablecer-btn').disabled = false;
         });
 
         // Función para ejecutar las instrucciones en secuencia
@@ -153,6 +249,28 @@
         // Botón para ejecutar las instrucciones
         document.getElementById('ejecutar-btn').addEventListener('click', () => {
             ejecutarInstrucciones();
+        });
+
+        function restablecerPosicion() {
+        // Restablecer valores iniciales
+        posicionX = 12; // Parte inferior izquierda
+        posicionY = 86;
+        angulo = 0;
+
+        // Actualizar visualmente la posición y el ángulo del personaje
+        personaje.style.transform = `translate(-50%, -50%) rotate(${angulo}deg)`;
+        personaje.style.left = `${posicionX}%`;
+        personaje.style.top = `${posicionY}%`;
+
+        // Opcional: Limpiar las instrucciones si se desea
+        instrucciones.length = 0;
+        document.getElementById('zona-drop').innerHTML = 'Arrastra las cartas aquí';
+        document.getElementById('ejecutar-btn').disabled = true;
+        document.getElementById('guardar-btn').disabled = true;
+    }
+
+        document.getElementById('restablecer-btn').addEventListener('click',() => { 
+            restablecerPosicion();
         });
     </script>
 
