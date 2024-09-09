@@ -18,4 +18,5 @@ app.use(express.static(__dirname + '/public/'));
 // routes 
 
 app.use(require('./routes/movimiento'));
+app.use(require('./routes/cuento'));
 //app.set('view engine', 'ejs');

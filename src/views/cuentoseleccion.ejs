@@ -1,0 +1,212 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="styles/cuentos/seleccion.css" />
+    
+
+    <title>Seleccion de cuentos</title>
+    
+</head>
+
+
+
+
+
+<body>
+
+    <div class="container">
+        <h1>Selecciona un Cuento para que el Robot lo Narre</h1>
+    
+        <!-- Contenedor para las tarjetas (se llenará dinámicamente con JS) -->
+        <div class="cards-container"></div>
+    
+        <!-- Indicador del cuento seleccionado -->
+        <div id="selected-story">
+          <p>No has seleccionado ningún cuento.</p>
+        </div>
+    
+        <!-- Botón de narración -->
+        <button id="narrar" disabled>Preguntas del Cuento</button>
+    
+        <div class="narration-section">
+          <h2>Preguntas del cuento:</h2>
+          <div id="narration"></div>
+          <div class="interaction">
+            <button id="interact" disabled>Narrar el cuento (Robot)</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+// script.js
+
+// Datos de los cuentos
+const cuentos = [
+  {
+    id: "cuento1",
+    titulo: "Caperucita Roja",
+    imagen: "img/cuentos/caperucita.jpg",
+    preguntas: [
+      "Que sucedio con caperucita",
+      "Por que le decian caperucita roja",
+      "que paso con el lobo"
+    ]
+  },
+  {
+    id: "cuento2",
+    titulo: "El Patito Feo",
+    imagen: "patito-feo.jpg",
+    preguntas: [
+      "Por que se sentia solo",
+      "En realidad que era"
+    ]
+  },
+  {
+    id: "cuento3",
+    titulo: "Los Tres Cerditos",
+    imagen: "cerditos.jpg",
+    preguntas: [
+      "Cuantos cerditos eran",
+      "De que construyo su casa el primer cerdito",
+      "Que paso con el lobo"
+    ]
+  },
+
+  {
+    id: "cuento4",
+    titulo: "Caperucita Roja4",
+    imagen: "caperucita.jpg",
+    preguntas: [
+      "Que sucedio con caperucita",
+      "Por que le decian caperucita roja",
+      "que paso con el lobo"
+    ]
+  },
+
+
+  {
+    id: "cuento5",
+    titulo: "Caperucita Roja5",
+    imagen: "caperucita.jpg",
+    preguntas: [
+     "Que sucedio con caperucita",
+      "Por que le decian caperucita roja",
+      "que paso con el lobo"
+    ]
+  },
+
+  
+  {
+    id: "cuento6",
+    titulo: "Caperucita Roja6",
+    imagen: "caperucita.jpg",
+    preguntas: [
+      "Que sucedio con caperucita",
+      "Por que le decian caperucita roja",
+      "que paso con el lobo"
+    ]
+  },
+
+
+
+  // array de cuentos
+];
+
+// Obtenemos los elementos del DOM
+const narrarBtn = document.getElementById("narrar");
+const narrationDiv = document.getElementById("narration");
+const interactBtn = document.getElementById("interact");
+const selectedStoryDiv = document.getElementById("selected-story");
+let cuentoSeleccionado = null;
+
+// Generar las tarjetas dinámicamente
+function generarTarjetasDeCuentos() {
+  const cardsContainer = document.querySelector('.cards-container');
+  cardsContainer.innerHTML = ""; // Limpiamos cualquier tarjeta existente
+
+  cuentos.forEach(cuento => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.setAttribute('data-cuento', cuento.id);
+    card.setAttribute('data-titulo', cuento.titulo);
+
+    // Estructura de la tarjeta
+    card.innerHTML = `
+      <img src="${cuento.imagen}" alt="${cuento.titulo}">
+      <h3>${cuento.titulo}</h3>
+    `;
+
+    // Añadimos el evento de selección de cuento
+    card.addEventListener('click', seleccionarCuento);
+    cardsContainer.appendChild(card);
+  });
+}
+
+// Función para las preguntas seleccionado
+function narrarCuento() {
+  if (cuentoSeleccionado) {
+    narrationDiv.innerHTML = ""; // Limpiar la narración anterior
+
+    // Buscar el cuento seleccionado en el arreglo
+    const cuento = cuentos.find(c => c.id === cuentoSeleccionado);
+
+    // las preguntas del cuento que aparescan con un retardo
+    cuento.preguntas.forEach((line, index) => {
+      setTimeout(() => {
+        narrationDiv.innerHTML += `<p>${line}</p>`;
+        narrationDiv.scrollTop = narrationDiv.scrollHeight; // Desplazarse al final
+      }, index * 2000); // Pausa de 3 segundos entre líneas
+    });
+  }
+}
+
+// Función para seleccionar el cuento cuando se hace clic en una card
+function seleccionarCuento(event) {
+  const card = event.currentTarget;
+  cuentoSeleccionado = card.getAttribute("data-cuento");
+  const tituloSeleccionado = card.getAttribute("data-titulo");
+
+  // Marcar la card seleccionada y desmarcar las demás
+  document.querySelectorAll(".card").forEach(card => card.classList.remove("selected"));
+  card.classList.add("selected");
+
+  // Mostrar el título del cuento seleccionado
+  selectedStoryDiv.innerHTML = `<p>Cuento seleccionado: <strong>${tituloSeleccionado}</strong></p>`;
+
+  // Habilitar el botón de narrar
+  narrarBtn.disabled = false;
+   // Habilitamos el botón de interacción
+  interactBtn.disabled = false;
+}
+
+// Event listeners para los botones
+narrarBtn.addEventListener("click", narrarCuento);
+
+interactBtn.addEventListener("click", () => {
+  const userChoice = confirm("desea mandar el cuento al robot");
+  
+});
+
+// Llamamos a la función al cargar la página
+window.onload = generarTarjetasDeCuentos;
+
+    </script>
+
+</body>
+</html>

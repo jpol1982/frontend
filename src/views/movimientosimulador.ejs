@@ -188,24 +188,7 @@ carta.addEventListener('touchstart', e => {
             e.preventDefault();
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+    
 
         zonaDrop.addEventListener('drop', e => {
             e.preventDefault();
@@ -227,17 +210,19 @@ carta.addEventListener('touchstart', e => {
             zonaDrop.appendChild(carta);
 
             document.getElementById('ejecutar-btn').disabled = false;
-            document.getElementById('guardar-btn').disabled = false; // Habilitar el botón de guardar
+        //    document.getElementById('guardar-btn').disabled = false; // Habilitar el botón de guardar
             document.getElementById('restablecer-btn').disabled = false;
         });
 
         // Función para ejecutar las instrucciones en secuencia
         function ejecutarInstrucciones() {
             let index = 0;
+            console.log(instrucciones);
             function ejecutarPaso() {
                 if (index >= instrucciones.length) return;
 
                 const instruccion = instrucciones[index];
+                
                 moverPersonaje(instruccion);
 
                 index++;
