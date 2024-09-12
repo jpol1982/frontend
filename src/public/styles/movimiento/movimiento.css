@@ -107,6 +107,22 @@ body {
     cursor: not-allowed;
 }
 
+#mandarRobot-btn {
+    padding: 10px 20px;
+    background-color: #0c9234;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#mandarRobot-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+
 .carta {
     transition: left 0.3s, top 0.3s;
 }

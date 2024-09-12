@@ -29,11 +29,18 @@
     <div id="zona-drop">
         Arrastra tus movimientos aqui
     </div>
-
+  
+    <div>
     <!-- Botón para ejecutar las acciones -->
     <button id="ejecutar-btn" disabled>Ejecutar</button>
   <!--  <button id="guardar-btn" disabled>Guardar Movimientos</button>-->
     <button id="restablecer-btn">Restablecer Posición</button>
+     <!-- Botón para mandar los datos al robot o esp32 -->
+   <button id="mandarRobot-btn" disabled>Mandar Al robot</button>
+</div>
+    
+    
+
 
     <!-- Escenario donde se mueve el personaje -->
     <div class="escenario"  style="background-image: url('img/figuras.jpg')">
@@ -42,6 +49,7 @@
             <img src="img/robotderecha.jpg" alt="Personaje">
         </div>
     </div>
+
 
     <script>
         // Objeto con las URLs de las imágenes para cada acción
@@ -121,7 +129,7 @@ carta.addEventListener('touchstart', e => {
             // Habilitar los botones
             document.getElementById('ejecutar-btn').disabled = false;
             document.getElementById('guardar-btn').disabled = false;
-
+            document.getElementById('mandarRobot-btn').disabled = false;
             // Regresar la carta a su posición original después de soltarla
             carta.style.left = `${0}px`;
             carta.style.top = `${0}px`;
@@ -212,6 +220,7 @@ carta.addEventListener('touchstart', e => {
             document.getElementById('ejecutar-btn').disabled = false;
         //    document.getElementById('guardar-btn').disabled = false; // Habilitar el botón de guardar
             document.getElementById('restablecer-btn').disabled = false;
+            document.getElementById('mandarRobot-btn').disabled = false;
         });
 
         // Función para ejecutar las instrucciones en secuencia
