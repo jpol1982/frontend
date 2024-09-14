@@ -33,10 +33,10 @@
     <div>
     <!-- Botón para ejecutar las acciones -->
     <button id="ejecutar-btn" disabled>Ejecutar</button>
-  <!--  <button id="guardar-btn" disabled>Guardar Movimientos</button>-->
+    <!--  <button id="guardar-btn" disabled>Guardar Movimientos</button>-->
     <button id="restablecer-btn">Restablecer Posición</button>
      <!-- Botón para mandar los datos al robot o esp32 -->
-   <button id="mandarRobot-btn" disabled>Mandar Al robot</button>
+    <button id="mandarRobot-btn" disabled>Mandar Al robot</button>
 </div>
     
     
@@ -260,12 +260,23 @@ carta.addEventListener('touchstart', e => {
         instrucciones.length = 0;
         document.getElementById('zona-drop').innerHTML = 'Arrastra las cartas aquí';
         document.getElementById('ejecutar-btn').disabled = true;
-        document.getElementById('guardar-btn').disabled = true;
+        document.getElementById('mandarRobot-btn').disabled = true;
+        
     }
 
         document.getElementById('restablecer-btn').addEventListener('click',() => { 
             restablecerPosicion();
         });
+
+
+// Event listeners para los botones
+
+
+document.getElementById('mandarRobot-btn').addEventListener('click', () => {
+  const userChoice = confirm("desea mandar la simulacion al robot");
+  
+});
+        
     </script>
 
 </body>

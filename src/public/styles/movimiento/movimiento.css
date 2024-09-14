@@ -64,6 +64,11 @@ body {
     align-items: center;
 }
 
+
+button {
+    border-radius: 10px;
+}
+
 #ejecutar-btn {
     padding: 10px 20px;
     background-color: #4CAF50;
@@ -120,6 +125,8 @@ body {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+
 
 
 
